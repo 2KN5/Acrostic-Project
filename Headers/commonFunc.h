@@ -15,6 +15,17 @@ static inline void clearScreen(){
     #endif
 }
 
+static inline void pause(){
+    printf("Press ENTER to continue...");
+    getchar();
+}
+
+static inline void stringToUpper(char str[]){
+    for(int i = 0; str[i] != '\0'; ++i){
+        str[i] = toupper(str[i]);
+    }
+}
+
 static inline char *readLine(){
     int buffer = 16, length = 0;
     char *string = (char*)malloc(buffer);

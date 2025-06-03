@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "commonFunc.h"
+#include "commandHandler.h"
 
 /*
 
@@ -19,15 +19,16 @@ int main(void){
 
         // Setting up environment.
         clearScreen();
-        printf(">");
+        printf("\n>");
 
         // Read the line dynamically.
         char *action = readLine();
-        if(!action || (strcmp(action, "exit") == 0)) return 0;
+        stringToUpper(action);
+        if(!action || (strcmp(action, "EXIT") == 0)) return 0;
 
         // Handle the other commands in commandHandler, to keep main clean.
-        //handleCommands();
-        //free(action);
+        handleCommand(action);
+        free(action);
     }
     return 0;
 }
