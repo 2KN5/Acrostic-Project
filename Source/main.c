@@ -15,6 +15,7 @@ dit24122@uop.gr
 */
 
 int main(void){
+    wordList *head = NULL, *tail = NULL;
     while(1){
 
         // Setting up environment.
@@ -27,7 +28,7 @@ int main(void){
         if(!action || (strcmp(action, "EXIT") == 0)) return 0;
 
         // Handle the other commands in commandHandler, to keep main clean.
-        handleCommand(action);
+        handleCommand(action, &head, &tail);
         free(action);
     }
     return 0;

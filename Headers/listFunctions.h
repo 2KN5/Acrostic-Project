@@ -17,6 +17,6 @@ typedef struct wList {
     struct wList *previous;
 } wordList;
 
-void takeInput(char str[], char command[]);
+void takeInput(char str[], char command[], wordList **head, wordList **tail);
 
 #endif

@@ -27,7 +27,7 @@ int checkValidCommand(char command[]){
     return 0;
 }
 
-void handleCommand(char string[]){
+void handleCommand(char string[], wordList **head, wordList **tail){
     char command[10];
     if(!getCommand(string, command) || !checkValidCommand(command)){
         printf("\nInvalid command!\n\n"); 
@@ -35,7 +35,7 @@ void handleCommand(char string[]){
         return;
     }
     if(strcmp(command, "INSERT") == 0 || strcmp(command, "LOAD") == 0){
-        takeInput(string, command);
+        takeInput(string, command, head, tail);
     } else if(strcmp(command, "DELETE") == 0){
         printf("Deleting element...\n");
     } else if(strcmp(command, "SHOWFWD") == 0 || strcmp(command, "SHOWREV") == 0){

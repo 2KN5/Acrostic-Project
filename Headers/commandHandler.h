@@ -6,6 +6,6 @@
 #include "commonFunc.h"
 #include "listFunctions.h"
 
-void handleCommand(char action[]);
+void handleCommand(char string[], wordList **head, wordList **tail);
 
 #endif 
