@@ -89,9 +89,11 @@ void extractWords(char str[], wordList **head, wordList **tail, int mode){
         if(isalpha(str[i])){
             word[count] = str[i];
             ++count;
-        } else if(count >= 1){
+        } else if(count > 1){
             word[count] = '\0';
             insertWord(head, tail, word, mode);
+            count = 0;
+        } else {
             count = 0;
         }
     }
