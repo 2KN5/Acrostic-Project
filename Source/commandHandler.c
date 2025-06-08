@@ -34,16 +34,25 @@ void handleCommand(char string[], wordList **head, wordList **tail){
         pause();
         return;
     }
+
+    // Get the string after the colon.
+    char *args = getColon(string);
+    if(!args){
+        printf("Failed!\n");
+        return;
+    }
+    while(*args == ' ') ++args;
+
+    // Appropriate action for each command.
     if(strcmp(command, "INSERT") == 0 || strcmp(command, "LOAD") == 0){
-        takeInput(string, command, head, tail);
+        takeInput(args, command, head, tail);
     } else if(strcmp(command, "DELETE") == 0){
         printf("Deleting element...\n");
     } else if(strcmp(command, "SHOWFWD") == 0 || strcmp(command, "SHOWREV") == 0){
-        //int num = extractNum(string);
         if(strstr(command, "FWD")){
-            //printForward(*head, num);
+            printForward(*head, args);
         } else {
-            //printReverse(*tail, num);
+            printReverse(*tail, args);
         }
     } else if(strcmp(command, "FINDFWD") == 0 || strcmp(command, "FINDREV") == 0){
         if(strstr(command, "FWD")){

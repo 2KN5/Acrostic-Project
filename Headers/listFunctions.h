@@ -17,9 +17,8 @@ typedef struct wList {
     struct wList *previous;
 } wordList;
 
-void takeInput(char str[], char command[], wordList **head, wordList **tail);
-void printForward(wordList *head, int num);
-void printReverse(wordList *tail, int num);
-int extractNum(char num[]);
+void takeInput(char args[], char command[], wordList **head, wordList **tail);
+void printForward(wordList *head, char word[]);
+void printReverse(wordList *tail, char word[]);
 
 #endif

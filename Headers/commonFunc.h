@@ -26,6 +26,12 @@ static inline void stringToUpper(char str[]){
     }
 }
 
+// Find the colon, and return a pointer right after it. 
+static inline char *getColon(char str[]){
+    char *c = strchr(str, ':');
+    return (c == NULL ? NULL : c + 1);
+}
+
 static inline char *readLine(){
     int buffer = 16, length = 0;
     char *string = (char*)malloc(buffer);

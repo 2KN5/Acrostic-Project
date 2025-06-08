@@ -1,12 +1,6 @@
 #include "listFunctions.h"
 
-// Find the colon, and return a pointer right after it. 
-char *getColon(char str[]){
-    char *c = strchr(str, ':');
-    return (c == NULL ? NULL : c + 1);
-}
-
-char getTxtName(char str[], char *txtName){
+void getTxtName(char str[], char *txtName){
     int count = 0;
     while(str[count] != ' ' && str[count] != '\0'){
         txtName[count] = str[count];
@@ -90,6 +84,18 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     printf("\n%s - accepted and added to the list.\n", inputWord);
 }
 
+void printForward(wordList *head, char word[]){
+    printf("String: %s\n", word);
+    // Get first token, check if the token ends there
+    // if it doesn't then it's not valid input
+    // if it does, convert to number and for loop
+}
+
+void printReverse(wordList *tail, char word[]){
+    printf("String: %s\n", word);
+}
+
+
 void extractWords(char str[], wordList **head, wordList **tail, int mode){
     // Convert to upper.
     stringToUpper(str);
@@ -130,15 +136,7 @@ void extractWords(char str[], wordList **head, wordList **tail, int mode){
     }
 }
 
-void takeInput(char str[], char command[], wordList **head, wordList **tail){
-    // Get the string after the colon.
-    char *args = getColon(str);
-    if(!args){
-        printf("Failed!\n");
-        return;
-    }
-    while(*args == ' ') ++args;
-    
+void takeInput(char args[], char command[], wordList **head, wordList **tail){
     // Check if it's input from the keyboard or a .txt file.
     if(strcmp(command, "INSERT") == 0){      
         // Put words into the list.  
