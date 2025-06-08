@@ -16,6 +16,18 @@ char getTxtName(char str[], char *txtName){
     strcat(txtName, ".txt");
 }
 
+int countUniqLetters(char word[]){
+    char letters[26] = {0};
+    for(int i = 0; i < strlen(word); ++i){
+        ++letters[word[i] - 'A'];
+    }
+    int count = 0;
+    for(int i = 0; i < 26; ++i){
+        if(letters[i]) ++count;
+    }
+    return count;
+}
+
 void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     // Check if the word already exists.
     wordList *curr = *head;
@@ -31,7 +43,7 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     wordList *newNode = malloc(sizeof(wordList));
     newNode->word = strdup(inputWord);
     newNode->wordLength = strlen(inputWord);
-    //newNode->uniqLetters = countUniqLetters(inputWord);
+    newNode->uniqLetters = countUniqLetters(inputWord);
     newNode->numOfTimes = 1;
     newNode->insertionMode = mode;
 
@@ -46,6 +58,7 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     
     // Check if list is empty.
     if(*head == NULL){
+        printf("\n%s - accepted and added to the list.\n", inputWord);
         *head = *tail = newNode;
         return;
     }
@@ -74,44 +87,46 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
         curr->previous->next = newNode;
         curr->previous = newNode;
     }
+    printf("\n%s - accepted and added to the list.\n", inputWord);
 }
 
 void extractWords(char str[], wordList **head, wordList **tail, int mode){
+    // Convert to upper.
     stringToUpper(str);
-    for(int i = 0; str[i] != '\0'; ++i){
-        if(!isalpha(str[i])) str[i] = ' ';
-    }
-    while(*str == ' ') ++str;
-    long length = strlen(str);
-    char *word = malloc(length + 1);
-    int count = 0;
-    for(int i = 0; str[i] != '\0'; ++i){
-        if(isalpha(str[i])){
-            word[count] = str[i];
+
+    // Break the string into a series of tokens.
+    char *token = strtok(str, " \n");
+    
+    while(token != NULL){
+        // Remove characters from beginning and end.
+        int tokenStart = 0, tokenEnd = strlen(token) - 1;
+        while(!isalpha(token[tokenStart]) && tokenStart <= tokenEnd) ++tokenStart;
+        while(!isalpha(token[tokenEnd]) && tokenEnd >= tokenStart) --tokenEnd;
+
+        // We have the word, now check if it's valid.
+        int count = 0, f = 1, length = tokenEnd - tokenStart + 2;
+        char *word = malloc(length);
+        for(int i = tokenStart; i <= tokenEnd; ++i){
+            if(!isalpha(token[i])){
+                f = 0;
+                break;
+            }
+            word[count] = token[i];
             ++count;
-        } else if(count > 1){
-            word[count] = '\0';
-            insertWord(head, tail, word, mode);
-            count = 0;
-        } else {
-            count = 0;
         }
-    }
-    if(count >= 1){
+
+        // If word is invalid, reject.
+        if(!f){
+            printf("\n%s - is not valid and was rejected.\n", token);
+            token = strtok(NULL, " \n");
+            continue;
+        }      
+
+        // If it's valid, insert the word into the list.
         word[count] = '\0';
         insertWord(head, tail, word, mode);
-        count = 0;
-    }
-    free(word);
-    printf("\n");
-}
-
-void printList(wordList *head){
-    int count = 1;
-    while(head){
-        printf("Word %d: %s\n", count, head->word);
-        head = head->next;
-        ++count;
+        free(word);
+        token = strtok(NULL, " \n");
     }
 }
 
@@ -128,7 +143,7 @@ void takeInput(char str[], char command[], wordList **head, wordList **tail){
     if(strcmp(command, "INSERT") == 0){      
         // Put words into the list.  
         extractWords(args, head, tail, 1);
-        printf("\n\n");
+        printf("\n");
     } else {
         printf("\nLoading string from file...\n");
         
@@ -142,12 +157,12 @@ void takeInput(char str[], char command[], wordList **head, wordList **tail){
         strcat(path, txtName);
         
         // Print Path.
-        printf("\nFull Path: %s\n\n", path);
+        printf("\nFull Path: %s\n", path);
         
         char *fileName = path;
         FILE *file = fopen(fileName, "r");
         if(!file){
-            printf("Failed to open: %s\n\n", txtName);
+            printf("\n-Failed to open: %s\n\n", txtName);
             return;
         }
 
@@ -164,10 +179,9 @@ void takeInput(char str[], char command[], wordList **head, wordList **tail){
         // Put words into the list.  
         extractWords(contents, head, tail, 0);
 
-        printf("\n\nSucceded in opening: %s\n\n", txtName);
+        printf("\n-Succeded in opening: %s\n\n", txtName);
         free(contents);
         free(txtName);
         fclose(file);
     }
-    printList(*head);
 }

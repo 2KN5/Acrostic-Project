@@ -39,10 +39,11 @@ void handleCommand(char string[], wordList **head, wordList **tail){
     } else if(strcmp(command, "DELETE") == 0){
         printf("Deleting element...\n");
     } else if(strcmp(command, "SHOWFWD") == 0 || strcmp(command, "SHOWREV") == 0){
+        //int num = extractNum(string);
         if(strstr(command, "FWD")){
-            printf("FORWARDS\n");
+            //printForward(*head, num);
         } else {
-            printf("REVERSE\n");
+            //printReverse(*tail, num);
         }
     } else if(strcmp(command, "FINDFWD") == 0 || strcmp(command, "FINDREV") == 0){
         if(strstr(command, "FWD")){
