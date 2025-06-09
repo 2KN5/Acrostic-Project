@@ -115,6 +115,7 @@ void deleteWord(wordList **head, wordList **tail, char deleteWord[]){
         }
         curr = curr->next;
     }
+    printf("\nWord \"%s\" - Was not found in the list.\n", deleteWord);
 }
 
 int countWords(wordList *ptr, int ht){
