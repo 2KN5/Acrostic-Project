@@ -102,70 +102,172 @@ int countWords(wordList *ptr, int ht){
     }
 }
 
-void printForward(wordList *head, char word[]){
+void printForward(wordList *head, char args[]){
     // Get number of words in the wlist.
     int numOfWords = countWords(head, 0);
 
     // Find the first number in the string.
     int count = 0;
-    char *numChar = malloc(strlen(word) + 1);
-    while(isdigit(word[count])){
-        numChar[count] = word[count];
+    char *numChar = malloc(strlen(args) + 1);
+    while(isdigit(args[count])){
+        numChar[count] = args[count];
         ++count;
     }
     numChar[count] = '\0';
 
     // Check if the number is valid.
-    if(strcmp(word, numChar) != 0){
+    if(strcmp(args, numChar) != 0){
         printf("\nInvalid Input!\n\n");
         free(numChar);
         return;
     }
 
     // If it's valid print the words.
-    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
     printf("\n------------------------------------------------------\n\n");
     int c = 0;
+    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
     while(head && c < finalNum){
         printf("Word %d: %s\n", c + 1, head->word);
         head = head->next;
         ++c;
     }
+    if(c == 0) printf("No matches found.\n");
     printf("\n------------------------------------------------------\n\n");
     free(numChar);
 }
 
-void printReverse(wordList *tail, char word[]){
+void printReverse(wordList *tail, char args[]){
     // Get number of words in the wlist.
     int numOfWords = countWords(tail, 1);
 
     // Find the first number in the string.
     int count = 0;
-    char *numChar = malloc(strlen(word) + 1);
-    while(isdigit(word[count])){
-        numChar[count] = word[count];
+    char *numChar = malloc(strlen(args) + 1);
+    while(isdigit(args[count])){
+        numChar[count] = args[count];
         ++count;
     }
     numChar[count] = '\0';
 
     // Check if the number is valid.
-    if(strcmp(word, numChar) != 0){
+    if(strcmp(args, numChar) != 0){
         printf("\nInvalid Input!\n\n");
         free(numChar);
         return;
     }
 
     // If it's valid print the words.
-    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
     printf("\n------------------------------------------------------\n\n");
     int c = 0;
+    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
     while(tail && c < finalNum){
         printf("Word %d: %s\n", c + 1, tail->word);
         tail = tail->previous;
         ++c;
     }
+    if(c == 0) printf("No matches found.\n");
     printf("\n------------------------------------------------------\n\n");
     free(numChar);
+}
+
+void findForward(wordList *head, char args[]){
+    // Get the 2 first strings.
+    int length = strlen(args);
+    char *word1 = malloc(length + 1), *word2 = malloc(length + 1);
+    char *token = strtok(args, " \n");
+    if(token == NULL){
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    strcpy(word1, token);
+    token = strtok(NULL, " \n");
+    if(token == NULL){
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    strcpy(word2, token);
+
+    // Check if the argument ends there.
+    token = strtok(NULL, " \n");
+    if(token == NULL){
+        for(int i = 0; word2[i] != '\0'; ++i){
+            if(!isdigit(word2[i])){
+                printf("\nInvalid Input!\n\n");
+                free(word1); free(word2);
+                return;
+            }
+        }
+
+        // Print the words found.
+        printf("\n------------------------------------------------------\n\n");
+        int i = 0, count = atoi(word2);
+        while(head && i < count){
+            if(strncmp(word1, head->word, strlen(word1)) == 0){
+                printf("Word %d: %s\n", i + 1, head->word);
+                ++i;
+            }
+            head = head->next;
+        }
+        if(i == 0) printf("No matches found.\n");
+        printf("\n------------------------------------------------------\n\n");
+    } else {
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    free(word1); free(word2);
+}
+
+void findReverse(wordList *tail, char args[]){
+    // Get the 2 first strings.
+    int length = strlen(args);
+    char *word1 = malloc(length + 1), *word2 = malloc(length + 1);
+    char *token = strtok(args, " \n");
+    if(token == NULL){
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    strcpy(word1, token);
+    token = strtok(NULL, " \n");
+    if(token == NULL){
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    strcpy(word2, token);
+
+    // Check if the argument ends there.
+    token = strtok(NULL, " \n");
+    if(token == NULL){
+        for(int i = 0; word2[i] != '\0'; ++i){
+            if(!isdigit(word2[i])){
+                printf("\nInvalid Input!\n\n");
+                free(word1); free(word2);
+                return;
+            }
+        }
+        
+        // Print the words found.
+        printf("\n------------------------------------------------------\n\n");
+        int i = 0, count = atoi(word2);
+        while(tail && i < count){
+            if(strncmp(word1, tail->word, strlen(word1)) == 0){
+                printf("Word %d: %s\n", i + 1, tail->word);
+                ++i;
+            }
+            tail = tail->previous;
+        }
+        if(i == 0) printf("No matches found.\n");
+        printf("\n------------------------------------------------------\n\n");
+    } else {
+        printf("\nInvalid Input!\n\n");
+        free(word1); free(word2);
+        return;
+    }
+    free(word1); free(word2);
 }
 
 void extractWords(char str[], wordList **head, wordList **tail, int mode){
@@ -202,7 +304,7 @@ void extractWords(char str[], wordList **head, wordList **tail, int mode){
 
         // If it's valid, insert the word into the list.
         word[count] = '\0';
-        insertWord(head, tail, word, mode);
+        if(count >= 1) insertWord(head, tail, word, mode);
         free(word);
         token = strtok(NULL, " \n");
     }

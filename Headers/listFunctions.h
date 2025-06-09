@@ -18,7 +18,9 @@ typedef struct wList {
 } wordList;
 
 void takeInput(char args[], char command[], wordList **head, wordList **tail);
-void printForward(wordList *head, char word[]);
-void printReverse(wordList *tail, char word[]);
+void printForward(wordList *head, char args[]);
+void printReverse(wordList *tail, char args[]);
+void findForward(wordList *head, char args[]);
+void findReverse(wordList *tail, char args[]);
 
 #endif

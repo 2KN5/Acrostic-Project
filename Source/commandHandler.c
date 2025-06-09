@@ -42,12 +42,18 @@ void handleCommand(char string[], wordList **head, wordList **tail){
         return;
     }
     while(*args == ' ') ++args;
+    int length = strlen(args) - 1;
+    while(args[length] == ' '){
+        args[length] = '\0';
+        --length;
+    }
 
     // Appropriate action for each command.
     if(strcmp(command, "INSERT") == 0 || strcmp(command, "LOAD") == 0){
         takeInput(args, command, head, tail);
     } else if(strcmp(command, "DELETE") == 0){
         printf("Deleting element...\n");
+        //deleteWords(head, args);
     } else if(strcmp(command, "SHOWFWD") == 0 || strcmp(command, "SHOWREV") == 0){
         if(strstr(command, "FWD")){
             printForward(*head, args);
@@ -56,14 +62,16 @@ void handleCommand(char string[], wordList **head, wordList **tail){
         }
     } else if(strcmp(command, "FINDFWD") == 0 || strcmp(command, "FINDREV") == 0){
         if(strstr(command, "FWD")){
-            printf("FORWARDS\n");
+            findForward(*head, args);
         } else {
-            printf("REVERSE\n");
+            findReverse(*tail, args);
         }
     } else if(strcmp(command, "CREATE") == 0){
         printf("Creating element...\n");
+        //createAcr();
     } else {
         printf("Saving contents...\n");
+        //saveAcr();
     }
     pause();
 }
