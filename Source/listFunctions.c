@@ -84,17 +84,89 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     printf("\n%s - accepted and added to the list.\n", inputWord);
 }
 
+int countWords(wordList *ptr, int ht){
+    if(ht == 0){
+        int words = 0;
+        while(ptr){
+            ++words;
+            ptr = ptr->next;
+        }
+        return words;
+    } else {
+        int words = 0;
+        while(ptr){
+            ++words;
+            ptr = ptr->previous;
+        }
+        return words;
+    }
+}
+
 void printForward(wordList *head, char word[]){
-    printf("String: %s\n", word);
-    // Get first token, check if the token ends there
-    // if it doesn't then it's not valid input
-    // if it does, convert to number and for loop
+    // Get number of words in the wlist.
+    int numOfWords = countWords(head, 0);
+
+    // Find the first number in the string.
+    int count = 0;
+    char *numChar = malloc(strlen(word) + 1);
+    while(isdigit(word[count])){
+        numChar[count] = word[count];
+        ++count;
+    }
+    numChar[count] = '\0';
+
+    // Check if the number is valid.
+    if(strcmp(word, numChar) != 0){
+        printf("\nInvalid Input!\n\n");
+        free(numChar);
+        return;
+    }
+
+    // If it's valid print the words.
+    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
+    printf("\n------------------------------------------------------\n\n");
+    int c = 0;
+    while(head && c < finalNum){
+        printf("Word %d: %s\n", c + 1, head->word);
+        head = head->next;
+        ++c;
+    }
+    printf("\n------------------------------------------------------\n\n");
+    free(numChar);
 }
 
 void printReverse(wordList *tail, char word[]){
-    printf("String: %s\n", word);
-}
+    // Get number of words in the wlist.
+    int numOfWords = countWords(tail, 1);
 
+    // Find the first number in the string.
+    int count = 0;
+    char *numChar = malloc(strlen(word) + 1);
+    while(isdigit(word[count])){
+        numChar[count] = word[count];
+        ++count;
+    }
+    numChar[count] = '\0';
+
+    // Check if the number is valid.
+    if(strcmp(word, numChar) != 0){
+        printf("\nInvalid Input!\n\n");
+        free(numChar);
+        return;
+    }
+
+    // If it's valid print the words.
+    int num = atoi(numChar), finalNum = (num > numOfWords ? numOfWords : num);
+    printf("\n------------------------------------------------------\n\n");
+    int c = 0;
+    while(tail && c < finalNum){
+        printf("Word %d: %s\n", c + 1, tail->word);
+        tail = tail->previous;
+        ++c;
+    }
+    printf("\n------------------------------------------------------\n\n");
+    free(numChar);
+}
 
 void extractWords(char str[], wordList **head, wordList **tail, int mode){
     // Convert to upper.
