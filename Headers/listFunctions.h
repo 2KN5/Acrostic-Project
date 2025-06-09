@@ -17,10 +17,11 @@ typedef struct wList {
     struct wList *previous;
 } wordList;
 
-void takeInput(char args[], char command[], wordList **head, wordList **tail);
+void takeInput(wordList **head, wordList **tail, char args[], char command[]);
 void printForward(wordList *head, char args[]);
 void printReverse(wordList *tail, char args[]);
 void findForward(wordList *head, char args[]);
 void findReverse(wordList *tail, char args[]);
+void extractWords_DELETION(wordList **head, wordList **tail, char str[]);
 
 #endif

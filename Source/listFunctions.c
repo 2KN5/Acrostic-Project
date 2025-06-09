@@ -84,6 +84,39 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     printf("\n%s - accepted and added to the list.\n", inputWord);
 }
 
+void deleteWord(wordList **head, wordList **tail, char deleteWord[]){
+    // Check if the word exists in the list.
+    wordList *curr = *head;
+    while(curr){
+        if(strcmp(deleteWord, curr->word) == 0){
+            printf("\nFound \"%s\" - Removing it from the list.\n", curr->word);
+            
+            if(curr->previous == NULL && curr->next == NULL){
+                // If it's the only the node.
+                *head = *tail = NULL;
+            } else if(curr->previous == NULL){
+                // If it's the head.
+                *head = curr->next;
+                curr->next->previous = NULL;
+            } else if(curr->next == NULL){
+                // If it's the tail.
+                *tail = curr->previous;
+                curr->previous->next = NULL;
+            } else {
+                // If it's in the middle.
+                curr->previous->next = curr->next;
+                curr->next->previous = curr->previous;
+                curr->previous = NULL;
+                curr->next = NULL;
+            }
+            free(curr->word); // We used strdup - It allcated new memory on the heap.
+            free(curr); // We used malloc.
+            return;
+        }
+        curr = curr->next;
+    }
+}
+
 int countWords(wordList *ptr, int ht){
     if(ht == 0){
         int words = 0;
@@ -270,7 +303,7 @@ void findReverse(wordList *tail, char args[]){
     free(word1); free(word2);
 }
 
-void extractWords(char str[], wordList **head, wordList **tail, int mode){
+void extractWords_INSERTION(wordList **head, wordList **tail, char str[], int mode){
     // Convert to upper.
     stringToUpper(str);
 
@@ -310,11 +343,50 @@ void extractWords(char str[], wordList **head, wordList **tail, int mode){
     }
 }
 
-void takeInput(char args[], char command[], wordList **head, wordList **tail){
+void extractWords_DELETION(wordList **head, wordList **tail, char str[]){
+    // Convert to upper.
+    stringToUpper(str);
+
+    printf("\n------------------------------------------------------\n");
+
+    // Break the string into a series of tokens.
+    char *token = strtok(str, " \n");
+    
+    while(token != NULL){
+        
+        // We have the word, now check if it's valid.
+        int count = 0, f = 1, length = strlen(token) - 1;
+        char *word = malloc(length);
+        for(int i = 0; i <= length; ++i){
+            if(!isalpha(token[i])){
+                f = 0;
+                break;
+            }
+            word[count] = token[i];
+            ++count;
+        }
+
+        // If word is invalid, reject.
+        if(!f){
+            printf("\n%s - is not a valid word. It can't be in the list.\n", token);
+            token = strtok(NULL, " \n");
+            continue;
+        }      
+
+        // If it's valid, insert the word into the list.
+        word[count] = '\0';
+        if(count >= 1) deleteWord(head, tail, word);
+        free(word);
+        token = strtok(NULL, " \n");
+    }
+    printf("\n------------------------------------------------------\n\n");
+}
+
+void takeInput(wordList **head, wordList **tail, char args[], char command[]){
     // Check if it's input from the keyboard or a .txt file.
     if(strcmp(command, "INSERT") == 0){      
         // Put words into the list.  
-        extractWords(args, head, tail, 1);
+        extractWords_INSERTION(head, tail, args, 1);
         printf("\n");
     } else {
         printf("\nLoading string from file...\n");
@@ -349,7 +421,7 @@ void takeInput(char args[], char command[], wordList **head, wordList **tail){
         contents[fileSize] = '\0';
 
         // Put words into the list.  
-        extractWords(contents, head, tail, 0);
+        extractWords_INSERTION(head, tail, contents, 0);
 
         printf("\n-Succeded in opening: %s\n\n", txtName);
         free(contents);

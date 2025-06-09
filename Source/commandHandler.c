@@ -50,10 +50,9 @@ void handleCommand(char string[], wordList **head, wordList **tail){
 
     // Appropriate action for each command.
     if(strcmp(command, "INSERT") == 0 || strcmp(command, "LOAD") == 0){
-        takeInput(args, command, head, tail);
+        takeInput(head, tail, args, command);
     } else if(strcmp(command, "DELETE") == 0){
-        printf("Deleting element...\n");
-        //deleteWords(head, args);
+        extractWords_DELETION(head, tail, args);
     } else if(strcmp(command, "SHOWFWD") == 0 || strcmp(command, "SHOWREV") == 0){
         if(strstr(command, "FWD")){
             printForward(*head, args);
