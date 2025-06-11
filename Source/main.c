@@ -52,7 +52,7 @@ int main(void){
     wordList *curr = head;
     while(curr){
         wordList *next = curr->next;
-        free(curr->word); // We used strdup - It allocated new memory on the heap.
+        free(curr->word); // We used malloc here too.
         free(curr);
         curr = next;
     }

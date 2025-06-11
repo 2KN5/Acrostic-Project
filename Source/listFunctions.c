@@ -25,7 +25,8 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
 
     // Allocate the new node.
     wordList *newNode = malloc(sizeof(wordList));
-    newNode->word = strdup(inputWord);
+    newNode->word = malloc(strlen(inputWord) + 1);
+    strcpy(newNode->word, inputWord);
     newNode->wordLength = strlen(inputWord);
     newNode->uniqLetters = countUniqLetters(inputWord);
     newNode->numOfTimes = 1;
@@ -99,7 +100,7 @@ void deleteWord(wordList **head, wordList **tail, char deleteWord[]){
                 curr->previous = NULL;
                 curr->next = NULL;
             }
-            free(curr->word); // We used strdup - It allocated new memory on the heap.
+            free(curr->word); // We used malloc.
             free(curr); // We used malloc.
             return;
         }
