@@ -55,7 +55,7 @@ int parseStrings(char **w1, char **w2, char args[]){
 
     // Check if the argument ends there.
     token = strtok(NULL, " \n");
-    if(token == NULL && (strcmp(*w2, "EASY") != 0 && strcmp(*w2, "HARD") != 0)){
+    if(token != NULL || (strcmp(*w2, "EASY") != 0 && strcmp(*w2, "HARD") != 0)){
         free(*w1); free(*w2);
         return 0;
     }
