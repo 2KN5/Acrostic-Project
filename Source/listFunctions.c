@@ -1,15 +1,5 @@
 #include "listFunctions.h"
 
-void getTxtName(char str[], char *txtName){
-    int count = 0;
-    while(str[count] != ' ' && str[count] != '\0'){
-        txtName[count] = str[count];
-        ++count;
-    }
-    txtName[count] = '\0';
-    strcat(txtName, ".txt");
-}
-
 int countUniqLetters(char word[]){
     char letters[26] = {0};
     for(int i = 0; i < strlen(word); ++i){
@@ -109,7 +99,7 @@ void deleteWord(wordList **head, wordList **tail, char deleteWord[]){
                 curr->previous = NULL;
                 curr->next = NULL;
             }
-            free(curr->word); // We used strdup - It allcated new memory on the heap.
+            free(curr->word); // We used strdup - It allocated new memory on the heap.
             free(curr); // We used malloc.
             return;
         }
@@ -390,10 +380,9 @@ void takeInput(wordList **head, wordList **tail, char args[], char command[]){
         extractWords_INSERTION(head, tail, args, 1);
         printf("\n");
     } else {
-        printf("\nLoading string from file...\n");
         
         // Get the full path of the .txt file.
-        char path[512] = "C:/Users/Kon Tampouris/Desktop/Project 2/Acrostic/example_txts/", *txtName = (char*)malloc(strlen(args) + 1);
+        char path[512] = "C:/Users/Kon Tampouris/Desktop/Project 2/Acrostic/example_txts/", *txtName = (char*)malloc(strlen(args) + 5);
         if(!txtName){
             printf("Memory allocation failed for \"txtName\"!");
             return;

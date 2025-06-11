@@ -15,7 +15,18 @@ dit24122@uop.gr
 */
 
 int main(void){
+
+    // Seed for rand.
+    srand(time(NULL));
+
+    // Head and tail.
     wordList *head = NULL, *tail = NULL;
+
+    // For saving the latest acrostic.
+    int latestAcrCount = 0;
+    char **latestAcrostic = NULL;
+
+    // Let's begin.
     while(1){
 
         // Setting up environment.
@@ -28,7 +39,7 @@ int main(void){
         if(!action || (strcmp(action, "EXIT") == 0)) return 0;
 
         // Handle the other commands in commandHandler, to keep main clean.
-        handleCommand(action, &head, &tail);
+        handleCommand(&head, &tail, action, &latestAcrostic, &latestAcrCount);
         free(action);
     }
     return 0;

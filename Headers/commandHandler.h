@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include "commonFunc.h"
 #include "listFunctions.h"
+#include "acrosticGen.h"
 
-void handleCommand(char string[], wordList **head, wordList **tail);
+void handleCommand(wordList **head, wordList **tail, char string[], char ***latestAcr, int *latestAcrCount);
 
 #endif 

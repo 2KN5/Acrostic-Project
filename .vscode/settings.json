@@ -2,6 +2,16 @@
     "files.associations": {
         "listfunctions.h": "c",
         "stdlib.h": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "commonfunc.h": "c",
+        "span": "c",
+        "type_traits": "c",
+        "random": "c",
+        "algorithm": "c",
+        "format": "c",
+        "string_view": "c",
+        "string": "c",
+        "cmath": "c",
+        "sstream": "c"
     }
 }

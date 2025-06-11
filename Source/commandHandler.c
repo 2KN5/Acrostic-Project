@@ -27,7 +27,7 @@ int checkValidCommand(char command[]){
     return 0;
 }
 
-void handleCommand(char string[], wordList **head, wordList **tail){
+void handleCommand(wordList **head, wordList **tail, char string[], char ***latestAcr, int *latestAcrCount){
     char command[10];
     if(!getCommand(string, command) || !checkValidCommand(command)){
         printf("\nInvalid command!\n\n"); 
@@ -66,11 +66,9 @@ void handleCommand(char string[], wordList **head, wordList **tail){
             findReverse(*tail, args);
         }
     } else if(strcmp(command, "CREATE") == 0){
-        printf("Creating element...\n");
-        //createAcr();
+        createAcr(*head, *tail, args, latestAcr, latestAcrCount);
     } else {
-        printf("Saving contents...\n");
-        //saveAcr();
+        saveAcr(args, latestAcr, latestAcrCount);
     }
     pause();
 }

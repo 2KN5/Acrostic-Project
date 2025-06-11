@@ -32,6 +32,16 @@ static inline char *getColon(char str[]){
     return (c == NULL ? NULL : c + 1);
 }
 
+static inline void getTxtName(char str[], char *txtName){
+    int count = 0;
+    while(str[count] != ' ' && str[count] != '\0'){
+        txtName[count] = str[count];
+        ++count;
+    }
+    txtName[count] = '\0';
+    strcat(txtName, ".txt");
+}
+
 static inline char *readLine(){
     int buffer = 16, length = 0;
     char *string = (char*)malloc(buffer);
