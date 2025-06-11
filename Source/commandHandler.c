@@ -7,6 +7,7 @@ int getCommand(char str[], char command[]){
         temp[count] = str[count];
         ++count;
     }
+
     // Check if command is at least 4 characters(load), and ends with a colin.
     if(str[count] != ':' || count < 4) return 0;
 

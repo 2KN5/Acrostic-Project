@@ -35,12 +35,36 @@ int main(void){
 
         // Read the line dynamically.
         char *action = readLine();
+
+        // Convert to upper and check the kind of action.
         stringToUpper(action);
-        if(!action || (strcmp(action, "EXIT") == 0)) return 0;
+        if(!action || (strcmp(action, "EXIT") == 0)){
+            free(action);
+            return 0;
+        }
 
         // Handle the other commands in commandHandler, to keep main clean.
         handleCommand(&head, &tail, action, &latestAcrostic, &latestAcrCount);
         free(action);
     }
+
+    // Free the list.
+    wordList *curr = head;
+    while(curr){
+        wordList *next = curr->next;
+        free(curr->word); // We used strdup - It allocated new memory on the heap.
+        free(curr);
+        curr = next;
+    }
+    
+    // Free acrostic saved.
+    if(latestAcrostic){
+        for(int i = 0; i < latestAcrCount; ++i){
+            free(latestAcrostic[i]);
+        }
+        free(latestAcrostic);
+    }
+
+    // End.
     return 0;
 }

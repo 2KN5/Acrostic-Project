@@ -41,7 +41,7 @@ void insertWord(wordList **head, wordList **tail, char inputWord[], int mode){
     newNode->previous = NULL;
     
     // Check if list is empty.
-    if(*head == NULL){
+    if(*head == NULL && *tail == NULL){
         printf("\n%s - accepted and added to the list.\n", inputWord);
         *head = *tail = newNode;
         return;
@@ -215,32 +215,33 @@ void findForward(wordList *head, char args[]){
 
     // Check if the argument ends there.
     token = strtok(NULL, " \n");
-    if(token == NULL){
-        for(int i = 0; word2[i] != '\0'; ++i){
-            if(!isdigit(word2[i])){
-                printf("\nInvalid Input!\n\n");
-                free(word1); free(word2);
-                return;
-            }
-        }
-
-        // Print the words found.
-        printf("\n------------------------------------------------------\n\n");
-        int i = 0, count = atoi(word2);
-        while(head && i < count){
-            if(strncmp(word1, head->word, strlen(word1)) == 0){
-                printf("Word %d: %s\n", i + 1, head->word);
-                ++i;
-            }
-            head = head->next;
-        }
-        if(i == 0) printf("No matches found.\n");
-        printf("\n------------------------------------------------------\n\n");
-    } else {
+    if(token != NULL){
         printf("\nInvalid Input!\n\n");
         free(word1); free(word2);
         return;
     }
+
+    // If it does, check for invalid string input.
+    for(int i = 0; word2[i] != '\0'; ++i){
+        if(!isdigit(word2[i])){
+            printf("\nInvalid Input!\n\n");
+            free(word1); free(word2);
+            return;
+        }
+    }
+
+    // Print the words found.
+    printf("\n------------------------------------------------------\n\n");
+    int i = 0, count = atoi(word2);
+    while(head && i < count){
+        if(strncmp(word1, head->word, strlen(word1)) == 0){
+            printf("Word %d: %s\n", i + 1, head->word);
+            ++i;
+        }
+        head = head->next;
+    }
+    if(i == 0) printf("No matches found.\n");
+    printf("\n------------------------------------------------------\n\n");
     free(word1); free(word2);
 }
 
@@ -265,32 +266,33 @@ void findReverse(wordList *tail, char args[]){
 
     // Check if the argument ends there.
     token = strtok(NULL, " \n");
-    if(token == NULL){
-        for(int i = 0; word2[i] != '\0'; ++i){
-            if(!isdigit(word2[i])){
-                printf("\nInvalid Input!\n\n");
-                free(word1); free(word2);
-                return;
-            }
-        }
-        
-        // Print the words found.
-        printf("\n------------------------------------------------------\n\n");
-        int i = 0, count = atoi(word2);
-        while(tail && i < count){
-            if(strncmp(word1, tail->word, strlen(word1)) == 0){
-                printf("Word %d: %s\n", i + 1, tail->word);
-                ++i;
-            }
-            tail = tail->previous;
-        }
-        if(i == 0) printf("No matches found.\n");
-        printf("\n------------------------------------------------------\n\n");
-    } else {
+    if(token != NULL){
         printf("\nInvalid Input!\n\n");
         free(word1); free(word2);
         return;
     }
+
+    // If it does, check for invalid string input.
+    for(int i = 0; word2[i] != '\0'; ++i){
+        if(!isdigit(word2[i])){
+            printf("\nInvalid Input!\n\n");
+            free(word1); free(word2);
+            return;
+        }
+    }
+    
+    // Print the words found.
+    printf("\n------------------------------------------------------\n\n");
+    int i = 0, count = atoi(word2);
+    while(tail && i < count){
+        if(strncmp(word1, tail->word, strlen(word1)) == 0){
+            printf("Word %d: %s\n", i + 1, tail->word);
+            ++i;
+        }
+        tail = tail->previous;
+    }
+    if(i == 0) printf("No matches found.\n");
+    printf("\n------------------------------------------------------\n\n");
     free(word1); free(word2);
 }
 
@@ -323,6 +325,7 @@ void extractWords_INSERTION(wordList **head, wordList **tail, char str[], int mo
         if(!f){
             printf("\n%s - is not valid and was rejected.\n", token);
             token = strtok(NULL, " \n");
+            free(word);
             continue;
         }      
 
@@ -344,7 +347,6 @@ void extractWords_DELETION(wordList **head, wordList **tail, char str[]){
     char *token = strtok(str, " \n");
     
     while(token != NULL){
-        
         // We have the word, now check if it's valid.
         int count = 0, f = 1, length = strlen(token) - 1;
         char *word = malloc(length);
@@ -361,6 +363,7 @@ void extractWords_DELETION(wordList **head, wordList **tail, char str[]){
         if(!f){
             printf("\n%s - is not a valid word. It can't be in the list.\n", token);
             token = strtok(NULL, " \n");
+            free(word);
             continue;
         }      
 
@@ -380,7 +383,6 @@ void takeInput(wordList **head, wordList **tail, char args[], char command[]){
         extractWords_INSERTION(head, tail, args, 1);
         printf("\n");
     } else {
-        
         // Get the full path of the .txt file.
         char path[512] = "C:/Users/Kon Tampouris/Desktop/Project 2/Acrostic/example_txts/", *txtName = (char*)malloc(strlen(args) + 5);
         if(!txtName){
@@ -389,14 +391,13 @@ void takeInput(wordList **head, wordList **tail, char args[], char command[]){
         }
         getTxtName(args, txtName);
         strcat(path, txtName);
-        
-        // Print Path.
-        printf("\nFull Path: %s\n", path);
-        
+
+        // Open .txt file with that name.
         char *fileName = path;
         FILE *file = fopen(fileName, "r");
         if(!file){
             printf("\n-Failed to open: %s\n\n", txtName);
+            free(txtName);
             return;
         }
 
@@ -405,6 +406,11 @@ void takeInput(wordList **head, wordList **tail, char args[], char command[]){
         long fileSize = ftell(file);
         rewind(file);
         char *contents = malloc(fileSize + 1);
+        if(!contents){
+            printf("Memory allocation failed for \"contents\"!");
+            free(txtName); free(contents);
+            return;
+        }
 
         // Store the contents of the .txt file in a string, and extract the words.
         fread(contents, sizeof(char), fileSize, file);
@@ -413,6 +419,7 @@ void takeInput(wordList **head, wordList **tail, char args[], char command[]){
         // Put words into the list.  
         extractWords_INSERTION(head, tail, contents, 0);
 
+        // If everything went well.
         printf("\n-Succeded in opening: %s\n\n", txtName);
         free(contents);
         free(txtName);

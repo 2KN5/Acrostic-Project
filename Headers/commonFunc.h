@@ -63,6 +63,7 @@ static inline char *readLine(){
             // Check if memory re-allocation failed.
             if(!temp){
                 printf("Memory re-allocation failed!");
+                free(string);
                 return NULL;
             }
             string = temp;

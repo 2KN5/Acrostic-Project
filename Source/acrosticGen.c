@@ -42,14 +42,12 @@ int parseStrings(char **w1, char **w2, char args[]){
     *w1 = malloc(length + 1), *w2 = malloc(length + 1);
     char *token = strtok(args, " \n");
     if(token == NULL){
-        printf("\nInvalid Input!\n\n");
         free(*w1); free(*w2);
         return 0;
     }
     strcpy(*w1, token);
     token = strtok(NULL, " \n");
     if(token == NULL){
-        printf("\nInvalid Input!\n\n");
         free(*w1); free(*w2);
         return 0;
     }
@@ -76,13 +74,11 @@ void saveAcr(char fileName[], char ***latestAcr, int *latestAcrCount){
     }
     getTxtName(fileName, txtName);
     strcat(path, txtName);
-    printf("Full Path: %s\n", path);
     FILE *file = fopen(path, "w");
     if(!file){
         printf("\n-Failed to create: %s\n\n", txtName);
         return;
     }
-    printf("test\n");
     for(int i = 0; i < *latestAcrCount; ++i){
         fprintf(file, "%s\n", (*latestAcr)[i]);
     }
@@ -97,6 +93,7 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
     char *word1 = NULL, *word2 = NULL;
     if(!parseStrings(&word1, &word2, args)){
         printf("\nInvalid Input!\n\n");
+        // Already freed in parseStrings.
         return;
     }
 
@@ -104,6 +101,7 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
     int numOfWords = getNumberOfWords(head);
     if(numOfWords == 0){
         printf("\nThe list is empty! Insert / Load some words first.\n\n");
+        free(word1); free(word2);
         return;
     }
 
@@ -136,6 +134,14 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
         }
         if(wordsWithLetter == 0){
             printf("\nNo word found starting with '%c' in the list for difficulty level '%s'. Cannot create acrostic.\n\n", word1[i], word2);
+
+            // Free word1, word2 and tempAcr.
+            free(word1); free(word2);
+            for(int i = 0; i < strlen(word1); ++i){
+                free(tempAcr[i]);
+            }
+            free(tempAcr);
+
             return;
         }
 
@@ -157,6 +163,7 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
 
         // Sort the array by difficulty.
         qsort(arr, wordsWithLetter, sizeof(wordList *), compare_DIFFICULTY);
+
         // Find a random word depending on the difficulty and store in array "acrostic".
         int middle = wordsWithLetter / 2, randomIndex, range;
         if(strcmp(word2, "EASY") == 0){
@@ -181,11 +188,14 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
         int count = 0;
         char str[maxLength];
         strcpy(str, tempAcr[i]);
-        for(int j = 0; j < strlen(str); ++j){
-            if(rand() % 3 == 0) str[j] = '_';
+        for(int j = 1; j < strlen(str); ++j){
+            if(rand() % 3 == 0){
+                str[j] = '_';
+                ++count;
+            }
         }
-        if(!count){
-            int randomIndex = rand() % strlen(str);
+        if(!count && strlen(str) > 1){
+            int randomIndex = rand() % (strlen(str) - 1) + 1;
             str[randomIndex] = '_';
         }
         strcpy(acrostic[elemCount++], str);
@@ -196,13 +206,21 @@ void createAcr(wordList *head, wordList *tail, char args[], char ***latestAcr, i
     }
 
     // Print the acrostic.
+    printf("\n------------------------------------------------------\n\n");
     for(int i = 0; i < elemCount; ++i){
-        printf("\n%s", acrostic[i]);
+        printf("%s\n", acrostic[i]);
     }
+    printf("\n------------------------------------------------------\n\n");
 
+    // Free the old acrostic if a new one is generated.
+    if((*latestAcr)){
+        for(int i = 0; i < (*latestAcrCount); ++i){
+            free((*latestAcr)[i]);
+        }
+        free(*latestAcr);
+    }
     *latestAcr = acrostic;
     *latestAcrCount = elemCount;
 
-    printf("\n");
     free(word1); free(word2);
 }
