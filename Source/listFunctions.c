@@ -100,7 +100,7 @@ void deleteWord(wordList **head, wordList **tail, char deleteWord[]){
                 curr->previous = NULL;
                 curr->next = NULL;
             }
-            free(curr->word); // We used malloc.
+            free(curr->word); // We used malloc -> KT
             free(curr); // We used malloc.
             return;
         }
